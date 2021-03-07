@@ -16,6 +16,7 @@ class LoginController extends GetxController {
       'password': FormControl(
         validators: [
           Validators.required,
+          Validators.minLength(6),
         ],
       ),
     });

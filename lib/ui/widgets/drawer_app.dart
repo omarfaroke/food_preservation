@@ -16,27 +16,26 @@ class AppDrawer extends StatelessWidget {
         textDirection: TextDirection.rtl,
         child: ListView(
           children: <Widget>[
-
             UserAccountsDrawerHeader(
               currentAccountPicture: GFAvatar(
-                      backgroundColor: AppColors.lightAccent,
-                      backgroundImage: user?.photoURL == null
-                          ? NetworkImage(
-                              user.photoURL,
-                            )
-                          : AssetImage(
-                              "assets/images/icon.png",
-                            ),
+                backgroundColor: AppColors.lightAccent,
+                backgroundImage: user?.photoURL != null
+                    ? NetworkImage(
+                        user.photoURL,
+                      )
+                    : AssetImage(
+                        "assets/images/icon.png",
+                      ),
 
-                      radius: 2,
+                radius: 2,
 
-                      // ,child: user?.photoURL == null
-                      //     ? Image.asset(
-                      //         "assets/images/icon.png",
-                      //         fit: BoxFit.cover,
-                      //       )
-                      //     : SizedBox(),
-                    ),
+                // ,child: user?.photoURL == null
+                //     ? Image.asset(
+                //         "assets/images/icon.png",
+                //         fit: BoxFit.cover,
+                //       )
+                //     : SizedBox(),
+              ),
               accountName: Text(
                 user?.displayName ?? '',
                 style: TextStyle(

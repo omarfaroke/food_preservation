@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "845663424901",
-    "project_id": "food-preservation-d6f3e",
-    "storage_bucket": "food-preservation-d6f3e.appspot.com"
+    "project_number": "698369361459",
+    "project_id": "food-preservation-33741",
+    "storage_bucket": "food-preservation-33741.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:845663424901:android:9d9ad4385a1f3de7c034ec",
+        "mobilesdk_app_id": "1:698369361459:android:cbfddffed0faa80cd18546",
         "android_client_info": {
           "package_name": "com.example.food_preservation"
         }
       },
       "oauth_client": [
         {
-          "client_id": "845663424901-hurb6v1d3piqr37oait6h65o786s9hc1.apps.googleusercontent.com",
+          "client_id": "698369361459-36fjv60r35q2e27vbgvmhjlckv0eldnv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBRFDmFBpvTYLr3kPfl8YWlRISDa48MyA8"
+          "current_key": "AIzaSyCw879eTa5IyWbbdSzooQb4h8NBDS_ghNk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "845663424901-hurb6v1d3piqr37oait6h65o786s9hc1.apps.googleusercontent.com",
+              "client_id": "698369361459-36fjv60r35q2e27vbgvmhjlckv0eldnv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
