@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 
 import 'locator.dart';
 
-
 class Root extends GetWidget<AuthenticationService> {
   @override
   Widget build(BuildContext context) {
@@ -15,14 +14,14 @@ class Root extends GetWidget<AuthenticationService> {
       // initState: (_) async {
       //  await Get.find<AppService>().init();
       // },
-      
+
       builder: (_) {
         if (Get.find<AuthenticationService>().currentUser?.uid != null) {
-          locator<AppService>();
-          return HomePage();
-        } else {
-          return LoginPage();
+          if (locator<AppService>().currentUser != null) {
+            return HomePage();
+          }
         }
+        return LoginPage();
       },
     );
   }

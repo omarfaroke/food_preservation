@@ -3,14 +3,20 @@ import 'dart:io';
 import 'package:food_preservation/models/user_model.dart';
 import 'package:food_preservation/services/authentication_service.dart';
 import 'package:food_preservation/services/helper_service.dart';
-import 'package:food_preservation/ui/pages/home/home_page.dart';
 import 'package:food_preservation/ui/widgets/toast_msg.dart';
+import 'package:food_preservation/util/enums.dart';
 import 'package:food_preservation/util/function_helpers.dart';
 import 'package:get/get.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class SignUpController extends GetxController {
+class AddUserController extends GetxController {
+  UserType _userType;
+
+  AddUserController(UserType userType) {
+    _userType = userType;
+  }
+
   final _form = fb.group({
     'name': FormControl(
       validators: [
@@ -21,17 +27,6 @@ class SignUpController extends GetxController {
       validators: [
         Validators.required,
         Validators.email,
-      ],
-    ),
-    'password': FormControl(
-      validators: [
-        Validators.required,
-        Validators.minLength(6),
-      ],
-    ),
-    'confirmPassword': FormControl(
-      validators: [
-        Validators.required,
       ],
     ),
     'photo': FormControl(
@@ -45,26 +40,16 @@ class SignUpController extends GetxController {
     'location': FormControl(
       validators: [],
     ),
-    // 'note': FormControl(
-    //   validators: [
-    //     Validators.required,
-    //   ],
-    // ),
+    'note': FormControl(
+      validators: [],
+    ),
     'phone': FormControl(
       validators: [
         Validators.required,
         Validators.number,
       ],
     ),
-    'type': FormControl<int>(
-      validators: [
-        Validators.required,
-        Validators.number,
-      ],
-    ),
-  }, [
-    Validators.mustMatch('password', 'confirmPassword'),
-  ]);
+  }, []);
 
   FormGroup get form => _form;
 
@@ -76,8 +61,10 @@ class SignUpController extends GetxController {
     update();
   }
 
-  Future signUp() async {
-    print('signUp');
+  String defaultPassword = '123456';
+
+  Future add() async {
+    print('add');
     if (_form.valid) {
       //
       try {
@@ -86,16 +73,21 @@ class SignUpController extends GetxController {
         Map mapFrom = _form.value;
 
         UserModel user = UserModel.fromMap(mapFrom);
-        String password = mapFrom['password'];
+        String password = defaultPassword;
 
         File imageFile =
             mapFrom['photo'] != null ? File(mapFrom['photo']) : null;
 
-        await Get.find<AuthenticationService>().signUpWithEmail(
-            email: user.email,
-            password: password,
-            user: user,
-            imageFile: imageFile);
+        user.type = _userType.index;
+        user.status = Status.approve;
+
+        String id = await Get.find<AuthenticationService>().signUpWithEmail(
+          email: user.email,
+          password: password,
+          user: user,
+          imageFile: imageFile,
+          newUserFromAdmin: true,
+        );
       } catch (e) {
         if (e is EmailAlreadyInUseException) {
           showSnackBar(
@@ -112,10 +104,10 @@ class SignUpController extends GetxController {
         return;
       }
 
-      showTextSuccess('تم تسجيل البيانات بنجاح');
+      showTextSuccess('تم إضافة البيانات بنجاح');
 
       isBusy = false;
-      afterSuccessSignUp;
+      afterSuccessAdd;
     } else {
       _form.markAllAsTouched();
 
@@ -125,8 +117,8 @@ class SignUpController extends GetxController {
     return true;
   }
 
-  get afterSuccessSignUp {
-    Get.offAll(HomePage());
+  get afterSuccessAdd {
+    Get.back();
   }
 
   Future showMapView() async {

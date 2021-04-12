@@ -6,54 +6,62 @@ import 'disable_widget.dart';
 class TempletForm extends StatelessWidget {
   const TempletForm({
     Key key,
-    @required this.title,
-    this.form,
+    this.title,
+    this.children,
     this.iconForm,
     this.scrollController,
     this.formCenter = true,
+    this.disable = false,
   }) : super(key: key);
 
   final title;
-  final List<Widget> form;
+  final List<Widget> children;
   final String iconForm;
   final ScrollController scrollController;
   final bool formCenter;
+  final bool disable;
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(color: AppColors.lightAccent),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              !formCenter ? _buildTitleWithIConWidget : SizedBox(),
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 4),
-                    child: Scrollbar(
-                      child: ListView(
-                        controller: scrollController,
-                        shrinkWrap: true,
-                        physics: ClampingScrollPhysics(),
-                        // physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                        children: formCenter 
-                            ? [_buildTitleWithIConWidget, ...this.form]
-                            : this.form,
+      child: DisableWidget(
+        withOpacity: false,
+        condition: disable,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(color: AppColors.lightAccent),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                (!formCenter && title != null)
+                    ? _buildTitleWithIConWidget
+                    : SizedBox(),
+                Expanded(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Scrollbar(
+                        child: ListView(
+                          controller: scrollController,
+                          shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
+                          // physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                          children: formCenter
+                              ? [_buildTitleWithIConWidget, ...this.children]
+                              : this.children,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -89,7 +97,9 @@ class TempletForm extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 30,)
+        SizedBox(
+          height: 30,
+        )
       ],
     );
   }

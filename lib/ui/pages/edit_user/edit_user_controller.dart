@@ -1,16 +1,24 @@
 import 'dart:io';
 
 import 'package:food_preservation/models/user_model.dart';
-import 'package:food_preservation/services/authentication_service.dart';
+import 'package:food_preservation/services/db/user_firestore_service.dart';
 import 'package:food_preservation/services/helper_service.dart';
-import 'package:food_preservation/ui/pages/home/home_page.dart';
+import 'package:food_preservation/services/storge_services.dart';
 import 'package:food_preservation/ui/widgets/toast_msg.dart';
 import 'package:food_preservation/util/function_helpers.dart';
 import 'package:get/get.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class SignUpController extends GetxController {
+class EditUserController extends GetxController {
+  UserModel _user;
+
+  EditUserController(UserModel user) {
+    _user = user;
+
+    setUpDefualtValue;
+  }
+
   final _form = fb.group({
     'name': FormControl(
       validators: [
@@ -21,17 +29,6 @@ class SignUpController extends GetxController {
       validators: [
         Validators.required,
         Validators.email,
-      ],
-    ),
-    'password': FormControl(
-      validators: [
-        Validators.required,
-        Validators.minLength(6),
-      ],
-    ),
-    'confirmPassword': FormControl(
-      validators: [
-        Validators.required,
       ],
     ),
     'photo': FormControl(
@@ -45,28 +42,22 @@ class SignUpController extends GetxController {
     'location': FormControl(
       validators: [],
     ),
-    // 'note': FormControl(
-    //   validators: [
-    //     Validators.required,
-    //   ],
-    // ),
+    'note': FormControl(
+      validators: [],
+    ),
     'phone': FormControl(
       validators: [
         Validators.required,
         Validators.number,
       ],
     ),
-    'type': FormControl<int>(
-      validators: [
-        Validators.required,
-        Validators.number,
-      ],
-    ),
-  }, [
-    Validators.mustMatch('password', 'confirmPassword'),
-  ]);
+  }, []);
 
   FormGroup get form => _form;
+
+  get setUpDefualtValue {
+    form.updateValue({..._user.toMap()});
+  }
 
   bool _isBusy = false;
 
@@ -76,8 +67,8 @@ class SignUpController extends GetxController {
     update();
   }
 
-  Future signUp() async {
-    print('signUp');
+  Future edit() async {
+    print('edit');
     if (_form.valid) {
       //
       try {
@@ -86,36 +77,40 @@ class SignUpController extends GetxController {
         Map mapFrom = _form.value;
 
         UserModel user = UserModel.fromMap(mapFrom);
-        String password = mapFrom['password'];
 
-        File imageFile =
-            mapFrom['photo'] != null ? File(mapFrom['photo']) : null;
+        user.id = _user.id;
+        user.status = _user.status;
 
-        await Get.find<AuthenticationService>().signUpWithEmail(
-            email: user.email,
-            password: password,
-            user: user,
-            imageFile: imageFile);
-      } catch (e) {
-        if (e is EmailAlreadyInUseException) {
-          showSnackBar(
-              title: "خطأ في التسجيل",
-              message: "البريد المستخدم موجود مسبقاً !");
-        } else {
-          showSnackBar(
-            title: "خطأ في التسجيل",
-            message: '',
-          );
+        bool pathPhotoIsUrl = user.photo?.isURL ?? false;
+
+        File imageFile;
+        if (!pathPhotoIsUrl) {
+          imageFile = mapFrom['photo'] != null ? File(mapFrom['photo']) : null;
         }
+
+        user.type = _user.type;
+
+        if (imageFile != null) {
+          user.photo = await StorageService.uploadFile(
+              'usersImages/${user.id}', imageFile);
+        }
+
+        await Get.find<UserFirestoreService>().updateUserInfo(user);
+      } catch (e) {
+        showSnackBar(
+          title: "خطأ في التعديل",
+          message: '',
+        );
+
         isBusy = false;
 
         return;
       }
 
-      showTextSuccess('تم تسجيل البيانات بنجاح');
+      showTextSuccess('تم تعديل البيانات بنجاح');
 
       isBusy = false;
-      afterSuccessSignUp;
+      afterSuccessAdd;
     } else {
       _form.markAllAsTouched();
 
@@ -125,8 +120,8 @@ class SignUpController extends GetxController {
     return true;
   }
 
-  get afterSuccessSignUp {
-    Get.offAll(HomePage());
+  get afterSuccessAdd {
+    Get.back();
   }
 
   Future showMapView() async {
@@ -139,5 +134,9 @@ class SignUpController extends GetxController {
     }
 
     return result;
+  }
+
+  Future<bool> deletePhoto(String value) async {
+    return await StorageService.deleteFile(value);
   }
 }

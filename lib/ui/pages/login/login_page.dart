@@ -3,6 +3,7 @@ import 'package:food_preservation/ui/animation/fade_animation.dart';
 import 'package:food_preservation/ui/pages/login/login_controller.dart';
 import 'package:food_preservation/ui/pages/signup/sign_up_page.dart';
 import 'package:food_preservation/ui/theme/app_colors.dart';
+import 'package:food_preservation/ui/widgets/custom_submit_button.dart';
 import 'package:food_preservation/ui/widgets/widgets.dart';
 import 'package:get/get.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -23,7 +24,7 @@ class LoginPage extends StatelessWidget {
                       TempletForm(
                         title: 'تسجيل الدخول',
                         iconForm: 'assets/images/icon.png',
-                        form: [
+                        children: [
                           CustomTextField(
                             formControlName: 'email',
                             hintText: 'البريد الالكتروني',
@@ -53,9 +54,17 @@ class LoginPage extends StatelessWidget {
                                   label: "دخول",
                                   onPressed: () => controller.login(),
                                 ),
-                          SizedBox(
-                            height: 30,
-                          ),
+                          _sizeBetween,
+                          TextButton(
+                              onPressed: () => controller.resetPassword(),
+                              child: Text(
+                                'نسيت كلمة المرور',
+                                style: TextStyle(
+                                    fontFamily: 'DinNextLtW23',
+                                    fontSize: 15.0,
+                                    color: AppColors.primary_1),
+                              )),
+                          // _sizeBetween,
                           _buildRegster
                         ],
                       ),
@@ -91,11 +100,11 @@ class LoginPage extends StatelessWidget {
                   style: TextStyle(
                       fontFamily: 'DinNextLtW23',
                       fontSize: 15.0,
-                      color: AppColors.primary_2),
+                      color: AppColors.primary_1),
                   textAlign: TextAlign.right,
                 ),
               ),
-              color: Colors.white,
+              // color: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),

@@ -10,6 +10,7 @@ class UserModel extends DataModel {
   String address;
   String location;
   String note;
+  String status;
   int type;
   UserModel({
     this.id,
@@ -21,6 +22,7 @@ class UserModel extends DataModel {
     this.location,
     this.note,
     this.type,
+    this.status,
   });
 
   @override
@@ -44,6 +46,7 @@ class UserModel extends DataModel {
       'location': location,
       'note': note,
       'type': type,
+      'status': status,
     };
   }
 
@@ -60,6 +63,7 @@ class UserModel extends DataModel {
       location: map['location'],
       note: map['note'],
       type: map['type'],
+      status: map['status'],
     );
   }
 

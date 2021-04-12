@@ -1,13 +1,16 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:food_preservation/ui/animation/fade_animation.dart';
 import 'package:food_preservation/ui/theme/app_colors.dart';
+import 'package:food_preservation/ui/widgets/custom_submit_button.dart';
 import 'package:food_preservation/ui/widgets/pick_Image_and_crop.dart';
 import 'package:food_preservation/ui/widgets/widgets.dart';
 import 'package:food_preservation/util/enums.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
 import 'sign_up_controller.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -32,7 +35,7 @@ class SignUpPage extends StatelessWidget {
                     TempletForm(
                       title: 'تسجيل',
                       formCenter: false,
-                      form: [
+                      children: [
                         _sizeBetween,
                         _buildImageUser(),
                         _sizeBetween,
@@ -91,17 +94,17 @@ class SignUpPage extends StatelessWidget {
                             ...validatorRequiredMs,
                           },
                         ),
-                        _sizeBetween,
-                        CustomTextField(
-                          formControlName: 'note',
-                          hintText: ' ملاحظات',
-                          prefixIcon: Icons.note,
-                          validationMessages: (control) => {
-                            ...validatorRequiredMs,
-                          },
-                          minLines: 2,
-                          maxLines: 4,
-                        ),
+                        // _sizeBetween,
+                        // CustomTextField(
+                        //   formControlName: 'note',
+                        //   hintText: ' ملاحظات',
+                        //   prefixIcon: Icons.note,
+                        //   validationMessages: (control) => {
+                        //     ...validatorRequiredMs,
+                        //   },
+                        //   minLines: 2,
+                        //   maxLines: 4,
+                        // ),
                         _sizeBetween,
                         CustomTextField(
                           formControlName: 'address',
@@ -203,7 +206,7 @@ class SignUpPage extends StatelessWidget {
 
           return 1 == 1
               ? GFButton(
-                  onPressed: () => controller.showMapView(Get.context),
+                  onPressed: () => controller.showMapView(),
                   text: location == null
                       ? 'الموقع على الخريطة'
                       : location.substring(1, 15),

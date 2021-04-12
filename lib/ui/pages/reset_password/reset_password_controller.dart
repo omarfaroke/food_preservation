@@ -1,12 +1,9 @@
-import 'package:food_preservation/app/root.dart';
 import 'package:food_preservation/services/authentication_service.dart';
-import 'package:food_preservation/ui/pages/home/home_page.dart';
-import 'package:food_preservation/ui/pages/reset_password/reset_password_page.dart';
 import 'package:food_preservation/ui/widgets/toast_msg.dart';
 import 'package:get/get.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class LoginController extends GetxController {
+class ResetPasswordController extends GetxController {
   FormGroup _form;
 
   get setupForm {
@@ -15,12 +12,6 @@ class LoginController extends GetxController {
         validators: [
           Validators.required,
           Validators.email,
-        ],
-      ),
-      'password': FormControl(
-        validators: [
-          Validators.required,
-          Validators.minLength(6),
         ],
       ),
     });
@@ -36,8 +27,8 @@ class LoginController extends GetxController {
     update();
   }
 
-  Future login() async {
-    print('login');
+  Future reset() async {
+    print('reset');
     if (_form.valid) {
       //
       isBusy = true;
@@ -45,29 +36,26 @@ class LoginController extends GetxController {
       Map mapFrom = _form.value;
 
       String email = mapFrom['email'];
-      String password = mapFrom['password'];
 
       try {
         await Get.find<AuthenticationService>()
-            .loginWithEmail(email: email, password: password);
-      } catch (e) {
-        showSnackBar(
-          title: "خطأ في تسجيل الدخول",
-          message: "تأكد من البريد الالكتروني وكلمة المرور !",
-        );
-
-        //  showTextError("خطأ في تسجيل الدخول");
-
+            .sendPasswordResetEmail(email: email);
+      } on UserNotFoundException catch (e) {
+        showTextError("البريد الالكتروني الذي ادخلته غير مسجل لدينا !");
         isBusy = false;
-
+        return;
+      } catch (e) {
+        isBusy = false;
+        showTextError("خطأ في اعادة كلمة المرور");
         return;
       }
 
-      showTextSuccess('تم تسجيل الدخول بنجاح');
-
       isBusy = false;
+      showTextSuccess('تم ارسال رابط استعادة كلمة المرور الى بريدك الالكتروني',
+          duration: Duration(seconds: 3));
 
-      Get.off(Root());
+      await Future.delayed(Duration(seconds: 1));
+      Get.back();
     } else {
       _form.markAllAsTouched();
 
@@ -81,9 +69,5 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
     setupForm;
-  }
-
-  resetPassword() {
-    Get.to(ResetPasswordPage());
   }
 }
