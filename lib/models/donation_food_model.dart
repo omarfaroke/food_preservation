@@ -16,6 +16,7 @@ class DonationFoodModel extends DataModel {
   int dateAdd;
   int dateUpdate;
   String status;
+  String refusingReason;
   DonationFoodModel({
     this.id,
     this.idRestaurant,
@@ -30,6 +31,7 @@ class DonationFoodModel extends DataModel {
     this.dateAdd,
     this.dateUpdate,
     this.status,
+    this.refusingReason,
   });
 
   @override
@@ -57,6 +59,7 @@ class DonationFoodModel extends DataModel {
       'dateAdd': dateAdd,
       'dateUpdate': dateUpdate,
       'status': status,
+      'refusingReason': refusingReason,
     };
   }
 
@@ -75,9 +78,21 @@ class DonationFoodModel extends DataModel {
       dateAdd: map['dateAdd'],
       dateUpdate: map['dateUpdate'],
       status: map['status'],
+      refusingReason: map['refusingReason'],
     );
   }
 
   factory DonationFoodModel.fromJson(String source) =>
       source == null ? null : DonationFoodModel.fromMap(json.decode(source));
+}
+
+
+
+abstract class StatusDonation {
+  static final String newDonation = "newDonation";
+  static final String accept = "accept";
+  static final String refuse = "refuse";
+  static final String underDelivery = "underDelivery";
+  static final String delivered = "delivered";
+  static final String deliveryFailure = "deliveryFailure";
 }

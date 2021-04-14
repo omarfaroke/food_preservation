@@ -9,9 +9,9 @@ import 'package:food_preservation/util/enums.dart';
 import 'package:get/get.dart';
 
 class VolunteersManagementController extends GetxController {
-  Rx<List<UserModel>> listParents = new Rx<List<UserModel>>();
+  Rx<List<UserModel>> listData = new Rx<List<UserModel>>();
 
-  List<UserModel> get listModel => listParents.value;
+  List<UserModel> get listModel => listData.value;
 
   get add {
     Get.to(AddUserPage(userType: UserType.Volunteers));
@@ -23,9 +23,9 @@ class VolunteersManagementController extends GetxController {
 
   @override
   void onInit() {
-    listParents.bindStream(Get.find<VolunteersFirestoreService>().stream());
+    listData.bindStream(Get.find<VolunteersFirestoreService>().stream());
     super.onInit();
-    listParents.listen((listData) {
+    listData.listen((listData) {
       _loading.value = false;
       // update();
     });

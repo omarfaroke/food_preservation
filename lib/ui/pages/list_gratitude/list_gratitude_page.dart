@@ -3,32 +3,25 @@ import 'package:food_preservation/ui/theme/app_colors.dart';
 import 'package:food_preservation/ui/widgets/widgets.dart';
 import 'package:get/get.dart';
 import 'components/card_info.dart';
-import 'volunteer_management_controller.dart';
+import 'list_gratitude_controller.dart';
 
-class VolunteersManagementPage extends StatelessWidget {
-  const VolunteersManagementPage({Key key, this.showSelected = false})
-      : super(key: key);
-
-  final bool showSelected;
+class ListGratitudePage extends StatelessWidget {
+  const ListGratitudePage({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MixinBuilder<VolunteersManagementController>(
-        init: VolunteersManagementController(),
+    return MixinBuilder<ListGratitudeController>(
+        init: ListGratitudeController(),
         builder: (controller) {
           return SafeArea(
             child: Directionality(
               textDirection: TextDirection.rtl,
               child: Scaffold(
                 appBar: AppBar(
-                  title:
-                      showSelected ? Text(' المتطوعين') : Text('ادارة المتطوعين'),
+                  title: Text('قائمة الامتنان'),
                   centerTitle: true,
-                  actions: [
-                    IconButton(
-                        icon: Icon(Icons.person_add),
-                        onPressed: () => controller.add)
-                  ],
                 ),
                 body: Container(
                   child: Column(
@@ -37,7 +30,7 @@ class VolunteersManagementPage extends StatelessWidget {
                     children: [
                       controller.loading
                           ? Loading()
-                          : (controller.listData.value?.isEmpty ?? true)
+                          : (controller.listModel?.isEmpty ?? true)
                               ? empty()
                               : list(),
                     ],
@@ -50,21 +43,15 @@ class VolunteersManagementPage extends StatelessWidget {
   }
 
   Widget list() {
-    final controller = Get.find<VolunteersManagementController>();
-    final list = controller.listData.value;
+    final controller = Get.find<ListGratitudeController>();
+    final list = controller.listModel;
     return Expanded(
       child: ListView.builder(
           // shrinkWrap: true,
           itemCount: list.length,
           itemBuilder: (context, index) {
-            return CardInfoVolunteer(
-              user: list[index],
-              onPressDelete: (parent) => controller.delete(parent),
-              onPressEdit: (parent) => controller.edit(parent),
-              onStatusChanged: (parent, status) =>
-                  controller.changeStatus(parent, status),
-              onPressSelected:
-                  showSelected ? (parent) => controller.selected(parent) : null,
+            return CardInfoGratitude(
+              donation: list[index],
             );
           }),
     );
@@ -73,7 +60,7 @@ class VolunteersManagementPage extends StatelessWidget {
   Widget empty() {
     return Center(
       child: Text(
-        'قائمة المتطوعين فارغة ..',
+        'قائمة الامتنان فارغة ..',
         style: TextStyle(
             fontSize: 18,
             color: AppColors.lightPrimary,

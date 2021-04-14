@@ -4,10 +4,9 @@ import 'package:food_preservation/app/locator.dart';
 import 'package:food_preservation/models/donation_food_model.dart';
 import 'package:food_preservation/models/user_model.dart';
 import 'package:food_preservation/services/app_service.dart';
-import 'package:food_preservation/services/db/restaurant_firestore_service.dart';
+import 'package:food_preservation/services/db/donation_firestore_service.dart';
 import 'package:food_preservation/services/helper_service.dart';
 import 'package:food_preservation/ui/widgets/toast_msg.dart';
-import 'package:food_preservation/util/enums.dart';
 import 'package:food_preservation/util/function_helpers.dart';
 import 'package:get/get.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
@@ -27,7 +26,9 @@ class AddDonationController extends GetxController {
       ],
     ),
     'photo': FormControl(
-      validators: [],
+      validators: [
+        Validators.required,
+      ],
     ),
     'address': FormControl(
       validators: [
@@ -83,9 +84,9 @@ class AddDonationController extends GetxController {
         donation.dateAdd = DateTime.now().millisecondsSinceEpoch;
         donation.dateUpdate = DateTime.now().millisecondsSinceEpoch;
         donation.idRestaurant = currentUser.id;
-        donation.status = Status.notApprove;
+        donation.status = StatusDonation.newDonation;
 
-        await Get.find<RestaurantFirestoreService>().addDonation(
+        await Get.find<DonationFirestoreService>().addDonation(
           donation,
           imageFile: imageFile,
         );

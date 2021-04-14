@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:food_preservation/app/locator.dart';
+import 'package:food_preservation/services/app_service.dart';
 import 'package:food_preservation/ui/pages/add_donation/add_donation_controller.dart';
 import 'package:food_preservation/ui/pages/add_donation/add_donation_page.dart';
+import 'package:food_preservation/ui/pages/list_donation/list_donation_page.dart';
+import 'package:food_preservation/ui/pages/list_gratitude/list_gratitude_page.dart';
 import 'package:food_preservation/ui/pages/restaurant_management/restaurants_management_page.dart';
 import 'package:food_preservation/ui/pages/volunteer_management/volunteer_management_page.dart';
 import 'package:food_preservation/ui/theme/app_colors.dart';
@@ -84,6 +88,21 @@ class HomePage extends StatelessWidget {
                 label: 'ادارة المتطوعين',
                 onPressed: () => Get.to(VolunteersManagementPage()),
               ),
+              CustomButton(
+                label: 'طلبات التبرع الجديدة',
+                onPressed: () =>
+                    controller.openNewListDontion,
+              ),
+              CustomButton(
+                label: 'طلبات التبرع المعلقة',
+                onPressed: () =>
+                    controller.openUnderDeliveryRequestsListDontionForAdmin,
+              ),
+              CustomButton(
+                label: ' كل طلبات التبرع ',
+                onPressed: () =>
+                    controller.openAllListDontion,
+              ),
             ],
           ),
         )
@@ -111,7 +130,17 @@ class HomePage extends StatelessWidget {
             crossAxisCount: 2,
             crossAxisSpacing: 20,
             mainAxisSpacing: 20,
-            children: [],
+            children: [
+              CustomButton(
+                label: 'الطلبات المعلقة',
+                onPressed: () =>
+                    controller.openUnderDeliveryRequestsListDontion,
+              ),
+              CustomButton(
+                label: 'الطلبات المنجزة',
+                onPressed: () => controller.openCompletedRequestsListDontion,
+              ),
+            ],
           ),
         )
       ],
@@ -142,6 +171,14 @@ class HomePage extends StatelessWidget {
               CustomButton(
                 label: 'إضافة طلب تبرع بالطعام ',
                 onPressed: () => Get.to(AddDonationPage()),
+              ),
+              CustomButton(
+                label: 'طلبات التبرع السابقة ',
+                onPressed: () => controller.openPreviousListDontion,
+              ),
+              CustomButton(
+                label: 'قائمة الامتنان ',
+                onPressed: () => Get.to(ListGratitudePage()),
               ),
             ],
           ),

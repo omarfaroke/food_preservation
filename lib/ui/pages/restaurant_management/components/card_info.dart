@@ -8,14 +8,14 @@ import 'package:get/get.dart';
 class CardInfoRestaurant extends StatelessWidget {
   const CardInfoRestaurant({
     Key key,
-    @required this.parent,
+    @required this.user,
     this.onStatusChanged,
     this.onPressDelete,
     this.onPressEdit,
     this.onPressSelected,
   }) : super(key: key);
 
-  final UserModel parent;
+  final UserModel user;
   final Function(UserModel user, bool value) onStatusChanged;
   final Function(UserModel user) onPressDelete;
   final Function(UserModel user) onPressEdit;
@@ -34,9 +34,9 @@ class CardInfoRestaurant extends StatelessWidget {
                 children: <Widget>[
                   ExpansionTile(
                     initiallyExpanded: false,
-                    leading: imageUser(parent),
+                    leading: imageUser(user),
                     title: Text(
-                      parent.name,
+                      user.name,
                       style: TextStyle(
                         color: AppColors.lightPrimary,
                       ),
@@ -44,7 +44,7 @@ class CardInfoRestaurant extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     subtitle: Text(
-                      ' ${parent.email}',
+                      ' ${user.email}',
                       style: TextStyle(
                         color: AppColors.lightPrimary,
                       ),
@@ -74,17 +74,17 @@ class CardInfoRestaurant extends StatelessWidget {
                                         horizontal: 12, vertical: 4),
                                     leading: Icon(Icons.location_on),
                                     title: Text("العنوان"),
-                                    subtitle: Text(parent.address),
+                                    subtitle: Text(user.address),
                                   ),
                                   ListTile(
                                     leading: Icon(Icons.email),
                                     title: Text("البريد الالكتروني"),
-                                    subtitle: Text(parent.email),
+                                    subtitle: Text(user.email),
                                   ),
                                   ListTile(
                                     leading: Icon(Icons.phone_android),
                                     title: Text("جوال"),
-                                    subtitle: Text(parent.phone),
+                                    subtitle: Text(user.phone),
                                   ),
                                 ],
                               ))
@@ -101,7 +101,7 @@ class CardInfoRestaurant extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 FlatButton(
-                                  onPressed: () => onPressSelected(parent),
+                                  onPressed: () => onPressSelected(user),
                                   child: Text(
                                     'تحديد',
                                     style: TextStyle(color: Colors.white),
@@ -115,17 +115,17 @@ class CardInfoRestaurant extends StatelessWidget {
                               children: <Widget>[
                                   IconButton(
                                       icon: Icon(Icons.edit),
-                                      onPressed: () => onPressEdit(parent)),
+                                      onPressed: () => onPressEdit(user)),
                                   IconButton(
                                       icon: Icon(Icons.delete),
-                                      onPressed: () => onPressDelete(parent)),
+                                      onPressed: () => onPressDelete(user)),
                                   // Text("حالة المعلم"),
                                   Switch(
                                     // checkColor: AppColors.lightPrimary,
                                     activeColor: AppColors.lightPrimary,
-                                    value: parent.status == Status.approve,
+                                    value: user.status == Status.approve,
                                     onChanged: (bool value) =>
-                                        onStatusChanged(parent, value),
+                                        onStatusChanged(user, value),
                                   ),
                                 ])),
                 ],
@@ -135,8 +135,8 @@ class CardInfoRestaurant extends StatelessWidget {
         ));
   }
 
-  Widget imageUser(parent) {
-    List<String> shorCutName = parent.name.trim().split(" ");
+  Widget imageUser(user) {
+    List<String> shorCutName = user.name.trim().split(" ");
 
     shorCutName.first = shorCutName.first.toUpperCase();
 
@@ -160,7 +160,7 @@ class CardInfoRestaurant extends StatelessWidget {
       ),
     );
 
-    if (parent.photo == null) {
+    if (user.photo == null) {
       return pictureName;
     }
 //  return pictureName;
@@ -173,7 +173,7 @@ class CardInfoRestaurant extends StatelessWidget {
         shape: BoxShape.circle,
         image: DecorationImage(
           fit: BoxFit.fill,
-          image: CachedNetworkImageProvider(parent.photo),
+          image: CachedNetworkImageProvider(user.photo),
         ),
       ),
     );

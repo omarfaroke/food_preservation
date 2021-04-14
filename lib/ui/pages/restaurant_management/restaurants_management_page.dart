@@ -37,7 +37,7 @@ class RestaurantsManagementPage extends StatelessWidget {
                     children: [
                       controller.loading
                           ? Loading()
-                          : (controller.listParents.value?.isEmpty ?? true)
+                          : (controller.listData.value?.isEmpty ?? true)
                               ? empty()
                               : list(),
                     ],
@@ -51,14 +51,14 @@ class RestaurantsManagementPage extends StatelessWidget {
 
   Widget list() {
     final controller = Get.find<RestaurantsManagementController>();
-    final list = controller.listParents.value;
+    final list = controller.listData.value;
     return Expanded(
       child: ListView.builder(
           // shrinkWrap: true,
           itemCount: list.length,
           itemBuilder: (context, index) {
             return CardInfoRestaurant(
-              parent: list[index],
+              user: list[index],
               onPressDelete: (parent) => controller.delete(parent),
               onPressEdit: (parent) => controller.edit(parent),
               onStatusChanged: (parent, status) =>
